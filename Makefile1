@@ -1,0 +1,4 @@
+all:
+	gcc huffman_compress.c file_In_out.c arch_logic.c math_func.c information.c compress.c -o huffcompress -lm
+
+	

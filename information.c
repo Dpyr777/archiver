@@ -2,7 +2,7 @@
 #include "types.h"
 #include "math_func.h"
 
-void set_information(symbol* symbols, int* k, int* kk, int *fsize_2)
+void set_information(symbol* symbols, int* k, unsigned int* kk, int *fsize_2)
 {
     int count = 1;
     for (int i = 0; i < MAX_SYMBOLS; i++)

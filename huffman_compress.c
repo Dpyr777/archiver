@@ -6,6 +6,7 @@
 #include "information.h"
 #include "file_In_out.h"
 #include "math_func.h"
+#include "compress.h"
 
 
 int main(int argc, char* argv[])
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
 
     int chh;  // в эту переменную читается информация из файла
     int k = 0; //счётчик количества различных букв, уникальных символов
-    int kk = 0; // счётчик количества всех знаков в файле
+    unsigned int kk = 0; // счётчик количества всех знаков в файле
                 
     int kolvo[MAX_SYMBOLS] = { 0 };//инициализируем массив количества уникальных символов
     symbol symbols[MAX_SYMBOLS] = { 0 }; //инициализируем массив записей 
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
     }
     
     // Читаем из файла по байтно, считаем количество символов и частоту;
-    reading_from_file(fp, symbols, kolvo, &kk, &k);  //Эту функцию опишите самостоятельно
+    readingFromFile(fp, symbols, kolvo, &kk, &k);  //Эту функцию опишите самостоятельно
     // обработка крайних случаев файл пуст(нет не одного символа)
     if (k == 0){
         puts("The compression file is empty!!!");
@@ -86,6 +87,7 @@ int main(int argc, char* argv[])
     }
 
     rewind(fp);//возвращаем указатель в файле в начало файла
+                       
     //в цикле читаем исходный файл, и записываем полученные в функциях коды в промежуточный файл
     while ((chh = fgetc(fp)) != EOF){
         fputs(symbols[chh].code, fp2);
@@ -94,18 +96,17 @@ int main(int argc, char* argv[])
 
     fclose(fp); // закрываем текст для сжатия
     fclose(fp2); // закрываем временный файл с кодом из 0 и 1;
-                        //
+                        
     fp2 = fopen("temp.txt", "rb");
     if (fp2 == NULL){
         printf("File temp.txt not open\n");
         return 1;
     }
 
-
-    //writing_to_file(fp2, fp3, symbols, kolvo, &kk, &k, &fsize2);  //Эту функцию опишите самостоятельно
-    writing_to_file(fp2, fp3, &fsize2);  //Эту функцию опишите самостоятельно
+    compress(fp2, fp3, symbols, k, kk);
     set_information(symbols, &k, &kk, &fsize2); 
    
-    fclose(fp3);
+    fclose(fp2); // закрываем временный файл с кодом из 0 и 1;
+    fclose(fp3); // закрываем сжатый файл архив;
     return 0;
 }

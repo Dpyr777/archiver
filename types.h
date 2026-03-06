@@ -28,4 +28,9 @@ union code              //Объединение для записи кода с
         unsigned b8 : 1;
     }byte;
 };
+typedef struct {
+    unsigned int code;
+    char symbol;
+    unsigned char len;
+} CodeSym;
 #endif
