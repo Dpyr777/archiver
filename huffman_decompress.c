@@ -20,6 +20,9 @@ void readMetadata(FILE* compressedFile, CodeSym* codeTable, int uniqueCharCount,
 int compareCode(const void *a, const void *b){
     CodeSym* cd1 = (CodeSym*)a;
     CodeSym* cd2 = (CodeSym*)b;
+    if (cd1->code == cd2->code){
+        return cd1->len - cd2->len;
+    }
     return cd1->code - cd2->code;
 }
 
@@ -40,15 +43,16 @@ int main(int argc, char** argv){
     unsigned int charLen = 0; 
     
     fread(&uniqueCharCount, sizeof(int), 1, compressedFile);
-    printf("uniqueCharCount = %d\n", uniqueCharCount);
     CodeSym* codeTable = (CodeSym*)malloc(sizeof(CodeSym) * uniqueCharCount);
 
     readMetadata(compressedFile, codeTable, uniqueCharCount, &charLen); 
+#if 0
     for (int i = 0; i < uniqueCharCount; ++i){
         printf("symbol = %c\n", codeTable[i].symbol);
         printf("code = %d\n", codeTable[i].code);
         printf("len = %d\n", codeTable[i].len);
     }
+#endif
     qsort(codeTable, uniqueCharCount, sizeof(CodeSym), compareCode);
     decompress(compressedFile, decompressedFile, codeTable, uniqueCharCount, charLen);
     fclose(compressedFile);

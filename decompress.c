@@ -3,18 +3,23 @@
 #include "types.h"
 #include "decompress.h"
 
+
 _Bool findCode(CodeSym* codeTable, int uniqueCharCount, int code, unsigned char codeLen, char *ch){
     int left = 0;
     int right = uniqueCharCount - 1;
     while(left <= right){
         int mid = left + ((right - left) >> 1);
-        if (code == codeTable[mid].code && codeTable[mid].len == codeLen){
-            printf("findCode\n");
-            *ch = codeTable[mid].symbol;
-            printf("ch = %c\n", *ch);
-            return 1;
-        }
-        if (code > codeTable[mid].code){
+        if (code == codeTable[mid].code) {
+            if (codeLen == codeTable[mid].len){
+                *ch = codeTable[mid].symbol;
+                return 1;
+            }
+            if (codeLen > codeTable[mid].len){
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        } else if (code > codeTable[mid].code){
             left = mid + 1;
         } else {
             right = mid - 1;
@@ -22,6 +27,18 @@ _Bool findCode(CodeSym* codeTable, int uniqueCharCount, int code, unsigned char 
     }
     return 0;
 }
+
+#if 0
+_Bool findCode(CodeSym* codeTable, int uniqueCharCount, int code, unsigned char codeLen, char *ch){
+    for (int i = 0; i < uniqueCharCount; ++i){
+        if (code == codeTable[i].code && codeLen == codeTable[i].len){
+            *ch = codeTable[i].symbol;
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
 
 void decompress(FILE* compressedFile, FILE* decompressedFile, CodeSym* codeTable, int uniqueCharCount, unsigned int charLen){
     char* buffer = (char*) malloc(charLen + 1);
@@ -81,10 +98,6 @@ void decompress(FILE* compressedFile, FILE* decompressedFile, CodeSym* codeTable
                 break;
             } 
         }
-    }
-    for (int i = 0; i < 10; ++i){
-        printf("buffer[%d] = %c\n", i, buffer[i]);
-    
     }
     fwrite(buffer, sizeof(char), charLen, decompressedFile);
     //buffer[indexBuffer] = '\0';

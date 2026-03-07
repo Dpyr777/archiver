@@ -7,7 +7,6 @@
 
 void writeMetadata(FILE* archiveFile, symbol* symbols, int uniqueCharCount, unsigned int charLen){
     fwrite(&uniqueCharCount, sizeof(int), 1, archiveFile);
-    printf("\nuniqueCharCount = %d\n\n", uniqueCharCount);
 
     for (int i = 0; i < MAX_SYMBOLS; ++i){
         if (symbols[i].code[0] != '\0'){

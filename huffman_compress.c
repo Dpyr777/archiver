@@ -89,8 +89,10 @@ int main(int argc, char* argv[])
     rewind(fp);//возвращаем указатель в файле в начало файла
                        
     //в цикле читаем исходный файл, и записываем полученные в функциях коды в промежуточный файл
+    //char testChar = ' ';
     while ((chh = fgetc(fp)) != EOF){
         fputs(symbols[chh].code, fp2);
+        //fputc(testChar, fp2); 
     }
     fsize2 = ftell(fp2);
 
